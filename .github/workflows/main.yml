@@ -1,9 +1,6 @@
 name: Test build
-#MoxIT.ESampling.sln
-on: push
 
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+on: push
 
 jobs:
   build:
@@ -14,17 +11,12 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
-        
-
-    - name: Restore Packages
-      run: nuget restore ./ConsoleApp1/ConsoleApp1.sln
-
-    - name: Build Solution
-      run: |
-        msbuild.exe ./ConsoleApp1/ConsoleApp1.sln /p:platform="Any CPU" /p:configuration="Release"
+    - name: Setup net
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+    - name: dotnet restore
+      run: dotnet restore ./ConsoleApp1/ConsoleApp1.sln
+    - name: Build
+      run: dotnet build ./ConsoleApp1/ConsoleApp1.sln --configuration Release
